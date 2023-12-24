@@ -29,6 +29,5 @@ for i in range(n):
     nodes += input("Enter the IP address: ")
 
 ping_count = int(input("Enter the count of ping: "))
-TTL = int(input("Enter the count : "))
 
-ping(nodes, ping_count=ping_count, ttl=TTL)
+ping(nodes, ping_count=ping_count)
