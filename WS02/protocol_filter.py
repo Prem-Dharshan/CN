@@ -1,12 +1,12 @@
 import pyshark
-from scapy.all import *
 
-
-def capture_packets(interface, filter_option):
+def capture_packets(interface, filter_option, bpf_filter, source_ip, destination_ip):
     print(f"Capturing packets on interface {interface}...\n")
 
     capture = pyshark.LiveCapture(
-        interface=interface, display_filter=filter_option)
+        interface=interface, display_filter=filter_option, bpf_filter=bpf_filter)
+
+    bpf_filter = f"ip src host {source_ip} and ip dst host {destination_ip}"
 
     try:
         for packet in capture.sniff_continuously(packet_count=5):
@@ -20,11 +20,16 @@ def capture_packets(interface, filter_option):
 
 def main():
     interface = input("Enter the network interface (e.g., eth0): ")
-
     filter_option = input(
-        "Enter a filter option (e.g., 'tcp', 'udp', 'icmp', or a keyword): ")
+        "Enter a display filter option (e.g., 'tcp', 'udp', 'icmp', or any valid Wireshark display filter): ")
+    bpf_filter = input(
+        "Enter a BPF filter (e.g., 'ip', 'tcp port 80', etc.): ")
+    
+    source_ip = input("Enter the source IP address: ")
+    destination_ip = input("Enter the destination IP address: ")
 
-    capture_packets(interface, filter_option)
+    capture_packets(interface, filter_option, bpf_filter,
+                    source_ip, destination_ip)
 
 
 if __name__ == "__main__":
